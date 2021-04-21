@@ -20,7 +20,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     privileged: true
-    user: www-data
+    user: root
     ports:
       - ${APACHE}:80
       - '443:443'
