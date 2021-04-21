@@ -1,0 +1,64 @@
+version: '3.9'
+
+services:
+  # nginx:
+  #   image: nginx:1.13
+  #   ports:
+  #     - ${NGINX}:80
+  #   volumes:
+  #     - ${DATA_FROM_CONTAINERS}/nginx/:/etc/nginx/
+  #     - ${DATA_FROM_CONTAINERS}/sites:/var/www/html
+  #   depends_on: 
+  #     - apache
+
+
+  php:
+    hostname: php
+    container_name: php
+    build:
+      context: ./data/php
+      dockerfile: Dockerfile
+    restart: always
+    privileged: true
+    user: root
+    ports:
+      - ${APACHE}:80
+      - '443:443'
+    depends_on: 
+        - db
+    volumes:
+       - ${DATA_FROM_CONTAINERS}/apache2:/etc/apache2/
+       - ${DATA_FROM_CONTAINERS}/sites:/var/www/html
+       - ${DATA_FROM_CONTAINERS}/php/php.ini:/usr/local/etc/php/conf.d/php.ini
+    # command: /bin/chown -R www-data:www-data /var/www/html/
+    networks:
+        - sotbit.ru
+
+  phpmyadmin:
+    depends_on:
+     - db
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    restart: always
+    ports:
+     - '8080:80'
+    environment:
+      PMA_HOST: db
+    networks:
+      - sotbit.ru
+
+  db:
+    image: mysql:8.0.24
+    container_name: database
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - '6603:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: helloworld
+    networks:
+        - sotbit.ru
+
+networks:
+    sotbit.ru:
+        name: sotbit.ru
