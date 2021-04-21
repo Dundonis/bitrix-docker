@@ -20,3 +20,4 @@
 
 # Project
 data/sites/default/*
+!/data/sites/default/.keep
