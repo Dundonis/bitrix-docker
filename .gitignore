@@ -20,4 +20,5 @@
 
 # Project
 data/sites/default/*
-!/data/sites/default/.keep
+!/data/sites/default/index.html
+!/data/sites/default/upload.php
